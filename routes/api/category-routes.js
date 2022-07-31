@@ -5,13 +5,11 @@ router.get('/', (req, res) => {
   // find all categories
   // be sure to include its associated Products
   Category.findAll({
-    attributes: ['id'],
-    include: [
-      {
-        model: Product,
-        attributes: ['category_id']
-      }
-    ]
+    attributes: ['id', 'category_name'],
+    include: {
+      model: Product,
+      attributes: ["id", "product_name", "price", "stock", "category_id"]
+    }
   })
     .then(categoryData => res.json(categoryData)
       .catch(err => {
@@ -27,12 +25,10 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id
     },
-    include: [
-      {
-        model: Product,
-        attributes: ['category_id']
-      }
-    ]
+    include: {
+      model: Product,
+      attributes: ["id", "product_name", "price", "stock", "category_id"]
+    }
   })
     .then(categoryData => {
       if (!categoryData) {
@@ -52,8 +48,8 @@ router.post('/', (req, res) => {
   Category.create({
     category_name: req.body.category_name
   })
-    .then(categoryData => res.json(categoryData))
-    .catch(err => {
+    .then((categoryData) => res.json(categoryData))
+    .catch((err) => {
       console.log(err);
       res.status(500).json(err);
     });
